@@ -7,28 +7,25 @@
 <html>
 <head>
 	<meta charset="ISO-8859-1">
-	<title>All Dorms</title>
+	<title>All Classes</title>
 	<link rel="stylesheet" href="/webjars/bootstrap/css/bootstrap.min.css" />
 </head>
 <body>
 	<div class="container">
-	<h1>Dorms</h1>
-	<a href="/dorms/new">Add a new dorm</a> | 
-	<a href="students/new">Add a new student</a> |
-	<a href="/classes/new">Add a new class</a> | 
-	<a href="/classes">View all classes</a>
-		<table class="table">
+	<h1>All Classes</h1>
+		<a href="/dorms">Dashboard</a>
+		<table class="table border">
 			<thead>
 				<tr>
-					<th>Dorm</th>
-					<th>Action</th>
+					<th>Class</th>
 				</tr>
 			</thead>
 			<tbody>
-				<c:forEach var="dorm" items="${ dorms }">
+				<c:forEach var="thisClass" items="${ classes }">
 					<tr>
-						<td><c:out value="${dorm.dormName}"></c:out></td>
-						<td><a href="/dorms/${ dorm.id }">See students</a></td>
+						<td>
+							<a href="/classes/${ thisClass.id }/detail"><c:out value="${thisClass.className}"></c:out></a>
+						</td>
 					</tr>
 				</c:forEach>
 			</tbody>

@@ -13,8 +13,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.tonyb650.studentroster.models.Class;
 import com.tonyb650.studentroster.models.Dorm;
 import com.tonyb650.studentroster.models.Student;
+import com.tonyb650.studentroster.services.ClassService;
 import com.tonyb650.studentroster.services.DormService;
 import com.tonyb650.studentroster.services.StudentService;
 
@@ -28,6 +30,9 @@ public class DormController {
 	
 	@Autowired
 	StudentService studentService;
+	
+	@Autowired
+	ClassService classService;
 	
 	@GetMapping("/")
 	public String index() {
@@ -45,10 +50,21 @@ public class DormController {
 		return "newdorm.jsp";
 	}
 	
+	@GetMapping("/classes/new")
+	public String newClass(@ModelAttribute("class") Class thisClass) {
+		return "newclass.jsp";
+	}
+	
 	@GetMapping("/students/new")
 	public String newStudent(@ModelAttribute("modelStudent") Student student, Model model) {
 		model.addAttribute("dorms", dormService.getAllDorms());
 		return "newstudent.jsp";
+	}
+	
+	@GetMapping("/classes")
+	public String showClasses(Model model) {
+		model.addAttribute("classes", classService.getAllClasses());
+		return "classlist.jsp";
 	}
 	
 	@GetMapping("/dorms/{id}")
@@ -58,6 +74,40 @@ public class DormController {
 		List<Student> allStudents = studentService.allStudents();
 		model.addAttribute("allStudents", allStudents);
 		return "dormdetail.jsp";
+	}
+	
+	@GetMapping("/classes/{id}/detail")
+	public String classDetail(@PathVariable("id") Long classId, Model model) {
+		model.addAttribute("thisClass", classService.getClassById(classId));
+		return "classdetail.jsp";
+	}
+	
+	@GetMapping("/students/{id}/detail")
+	public String studentDetail(@PathVariable("id") Long studentId, Model model) {
+		// DONE: adjust the following line to only include classes that are not assigned already:
+		Student thisStudent = studentService.findStudentById(studentId);
+		model.addAttribute("allClasses", classService.getUnassignedClassesForStudent(thisStudent));
+		//model.addAttribute("allClasses",classService.getAllClasses());
+		model.addAttribute("student", studentService.findStudentById(studentId));
+		return "studentdetail.jsp";
+	}
+	
+	@PutMapping("/students/{id}/addclass")
+	public String addStudentToClass(@PathVariable("id") Long studentId, @RequestParam("id") Long classId) {
+		Student thisStudent = studentService.findStudentById(studentId);
+		Class thisClass = classService.getClassById(classId);
+		thisStudent.getClasses().add(thisClass);
+		studentService.update(thisStudent);
+		return "redirect:/students/"+studentId+"/detail";
+	}
+	
+	@GetMapping("/classes/{classId}/remove/{studentId}")
+	public String removeStudentFromClass(@PathVariable("classId") Long classId, @PathVariable("studentId") Long studentId) {
+		Student thisStudent = studentService.findStudentById(studentId);
+		Class thisClass = classService.getClassById(classId);
+		thisStudent.getClasses().remove(thisClass);
+		studentService.update(thisStudent);
+		return "redirect:/students/"+studentId+"/detail";
 	}
 	
 	@PutMapping("/students/update/{dormId}")
@@ -84,6 +134,15 @@ public class DormController {
 			return "newstudent.jsp";
 		}
 		studentService.create(aStudent);
+		return "redirect:/dorms";
+	}
+	
+	@PostMapping("/classes/new")
+	public String addClass(@Valid @ModelAttribute("class") Class thisClass, BindingResult result) {
+		if(result.hasErrors()) {
+			return "newclass.jsp";
+		}
+		classService.create(thisClass);
 		return "redirect:/dorms";
 	}
 	

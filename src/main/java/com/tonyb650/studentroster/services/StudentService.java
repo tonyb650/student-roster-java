@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.tonyb650.studentroster.models.Student;
+import com.tonyb650.studentroster.models.Class;
 import com.tonyb650.studentroster.repositories.StudentRepository;
 
 @Service
@@ -25,6 +26,10 @@ public class StudentService {
 			return possibleStudent.get();
 		}
 		return null;
+	}
+	
+	public List<Student> getStudentsByClass(Class thisClass){
+		return studentRepository.findAllByClasses(thisClass);
 	}
 	
 	public Student create(Student student) {

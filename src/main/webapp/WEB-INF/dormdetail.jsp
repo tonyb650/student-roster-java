@@ -16,7 +16,7 @@
 		<a href="/dorms">Dashboard</a>
 		
 		
-		<form action="/students/update/${ dorm.id }" modelAttribute="student" method="post">
+		<form action="/students/update/${ dorm.id }" method="post">
 			<input type="hidden" name="_method" value="put" />
 			<label name="id" for="studentId" class="form-label">Students</label>
 			<select name="id" id="studentId">
@@ -26,7 +26,6 @@
 							(<c:out value="${ eachStudent.dorm.dormName }"/>)
 						</c:if>
 					 </option>
-					 <!-- How do I get the eachStudent.studentName value filled in ????  -->
 				</c:forEach>
 			</select>
 
@@ -45,7 +44,9 @@
 			<tbody>
 				<c:forEach var="studentInDorm" items="${ dorm.students }">
 					<tr>
-						<td><c:out value="${ studentInDorm.studentName }"></c:out></td>
+						<td>
+							<a href="/students/${ studentInDorm.id }/detail"><c:out value="${ studentInDorm.studentName }"/></a>
+						</td>
 						<td>
 							<form action="/students/${ studentInDorm.id }/remove/${ dorm.id }" method="post">
 								<input type="submit" class="btn btn-link" value="Remove from this dorm" />
