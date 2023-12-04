@@ -3,6 +3,8 @@ package com.tonyb650.studentroster.models;
 import java.util.Date;
 import java.util.List;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -26,11 +28,14 @@ public class Class {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
 	
-	@NotBlank
+	@NotBlank (message="Class name is required.")
 	private String className;
 	
 	@Column(updatable=false)
+	@DateTimeFormat(pattern="yyyy-MM-dd")
 	private Date createdAt;
+	
+	@DateTimeFormat(pattern="yyyy-MM-dd")
 	private Date updatedAt;
 	
 	// RELATIONSHIPS

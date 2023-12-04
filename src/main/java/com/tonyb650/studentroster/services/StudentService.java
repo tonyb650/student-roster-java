@@ -29,7 +29,7 @@ public class StudentService {
 	}
 	
 	public List<Student> getStudentsByClass(Class thisClass){
-		return studentRepository.findAllByClasses(thisClass);
+		return studentRepository.findByClasses(thisClass);
 	}
 	
 	public Student create(Student student) {

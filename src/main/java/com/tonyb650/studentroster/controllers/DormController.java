@@ -101,7 +101,7 @@ public class DormController {
 		return "redirect:/students/"+studentId+"/detail";
 	}
 	
-	@GetMapping("/classes/{classId}/remove/{studentId}")
+	@GetMapping("/classes/{classId}/remove/{studentId}") // I believe this should be PUT
 	public String removeStudentFromClass(@PathVariable("classId") Long classId, @PathVariable("studentId") Long studentId) {
 		Student thisStudent = studentService.findStudentById(studentId);
 		Class thisClass = classService.getClassById(classId);
@@ -110,7 +110,7 @@ public class DormController {
 		return "redirect:/students/"+studentId+"/detail";
 	}
 	
-	@PutMapping("/students/update/{dormId}")
+	@PutMapping("/students/update/{dormId}") // RESTful maybe should be "/students/{id}" or "/students/{id}/assigndorm" ?
 	public String updateStudent(@PathVariable("dormId") Long dormId, @RequestParam("id") Long id) {
 		Student studentToUpdate = studentService.findStudentById(id);
 		studentToUpdate.setDorm(dormService.findDormById(dormId));
@@ -118,7 +118,7 @@ public class DormController {
 		return "redirect:/dorms/"+dormId;
 	}
 	
-	@PostMapping("/dorms/new")
+	@PostMapping("/dorms/new") // RESTful convention should be "/dorms"
 	public String createDorm(@Valid @ModelAttribute("dorm") Dorm dorm, BindingResult validationsResult) {
 		if(validationsResult.hasErrors()) {
 			return "newdorm.jsp";
@@ -127,7 +127,7 @@ public class DormController {
 		return "redirect:/dorms";
 	}
 	
-	@PostMapping("/students/new")
+	@PostMapping("/students/new") // RESTful convention should be "/students"
 	public String createStudent(@Valid @ModelAttribute("modelStudent") Student aStudent, BindingResult result, Model model) {
 		if(result.hasErrors()) {
 			model.addAttribute("dorms", dormService.getAllDorms());
@@ -137,7 +137,7 @@ public class DormController {
 		return "redirect:/dorms";
 	}
 	
-	@PostMapping("/classes/new")
+	@PostMapping("/classes/new")  // RESTful convention should be "/classes"
 	public String addClass(@Valid @ModelAttribute("class") Class thisClass, BindingResult result) {
 		if(result.hasErrors()) {
 			return "newclass.jsp";
@@ -146,7 +146,7 @@ public class DormController {
 		return "redirect:/dorms";
 	}
 	
-	@PostMapping("/students/{id}/remove/{dormId}")
+	@PostMapping("/students/{id}/remove/{dormId}") // I'm pretty sure this should be PUT
 	public String removeFromDorm(@PathVariable("id") Long id,@PathVariable("dormId")Long dormId) {
 		Student studentToUpdate = studentService.findStudentById(id);
 		studentToUpdate.setDorm(null);

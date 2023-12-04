@@ -11,6 +11,9 @@ import com.tonyb650.studentroster.models.Class;
 @Repository
 public interface StudentRepository extends CrudRepository<Student, Long> {
 	List<Student> findAll();
-	List<Student> findAllByClasses(Class thisClass); // is this what you call a 'derived query'?
+	List<Student> findByClasses(Class thisClass); // 'Solution' code didn't have this query
+	
+	// 'Solution' code used the following query which I didn't need, presumably because each "dorm" object already holds a list of Students related to that dorm
+	List<Student> findByDormIdIs(Long dormId);
 	
 }
